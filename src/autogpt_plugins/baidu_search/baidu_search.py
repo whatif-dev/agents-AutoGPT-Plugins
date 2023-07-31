@@ -25,10 +25,7 @@ def _baidu_search(query: str, num_results=8):
         title = result.find('h3', class_='t').get_text()
         link = result.find('a', href=True)['href']
         snippet = result.find('span', class_=re.compile('^content-right_8Zs40'))
-        if snippet:
-            snippet = snippet.get_text()
-        else:
-            snippet = ''
+        snippet = snippet.get_text() if snippet else ''
         search_results.append({
             'title': title,
             'href': link,

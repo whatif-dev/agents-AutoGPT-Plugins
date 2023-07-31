@@ -93,15 +93,15 @@ class ApiCallCommand:
         # Type-check inputs - host
         if not isinstance(host, str):
             raise ValueError("host must be a string")
-        
+
         # Type-check inputs - endpoint
         if not isinstance(endpoint, str):
             raise ValueError("endpoint must be a string")
-        
+
         # Type-check inputs - method
         if not isinstance(mthd, str):
             raise ValueError("method must be a string")
-        
+
         # Type-check inputs - query_params
         if not params:
             params = {}
@@ -130,7 +130,7 @@ class ApiCallCommand:
                 body = str(body)
             except ValueError:
                 raise ValueError("body must be a string")
-            
+
         # Type-check inputs - headers
         if not hdrs:
             hdrs = {}
@@ -152,7 +152,7 @@ class ApiCallCommand:
             hdrs = new_headers
         else:
             raise ValueError("headers must be a dictionary or a JSON string")
-            
+
         # Type-check inputs - timeout_secs
         if timeout is None:
             raise ValueError("timeout_secs must be an integer")
@@ -171,18 +171,18 @@ class ApiCallCommand:
             sanitized_host = f"https://{sanitized_host}"
         url = urljoin(sanitized_host, sanitized_endpoint)
         if not is_valid_url(url): # type: ignore
-            raise ValueError("Invalid URL: " + url)
-        
+            raise ValueError(f"Invalid URL: {url}")
+
         # Validate method
         allowed_methods = ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"]
-        sanitized_method = self.sanitize(mthd).upper()    
+        sanitized_method = self.sanitize(mthd).upper()
         if sanitized_method not in allowed_methods:
-            raise ValueError("Invalid method: " + sanitized_method)
+            raise ValueError(f"Invalid method: {sanitized_method}")
 
         # Validate timeout_secs
-        if not timeout > 0:
+        if timeout <= 0:
             raise ValueError("timeout_secs must be a positive integer")
-        
+
         # Make the request
         try:
             if sanitized_method == "GET":
@@ -200,8 +200,8 @@ class ApiCallCommand:
             elif sanitized_method == "PATCH":
                 response = requests.patch(url, params=params, json=body, headers=hdrs, timeout=timeout)
             else:
-                raise ValueError("Invalid method: " + mthd)
-            
+                raise ValueError(f"Invalid method: {mthd}")
+
             response_text = response.text
             response = {
                 "status": "success",
