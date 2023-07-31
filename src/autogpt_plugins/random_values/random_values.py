@@ -47,7 +47,7 @@ class RandomValues:
         # Ensure min is less than max
         if min > max:
             min, max = max, min
-        
+
         # Test ranges
         if not (1 <= cnt <= 65535):
             raise ValueError("cnt must be between 1 and 65535")
@@ -55,14 +55,13 @@ class RandomValues:
             raise ValueError("min must be between 0 and 65535")
         if not (0 <= max <= 65535):
             raise ValueError("max must be between 0 and 65535")
-        
+
         # Make random numbers
         random_numbers = []
-        if isinstance(min, int) and isinstance(max, int):
-            for _ in range(cnt):
+        for _ in range(cnt):
+            if isinstance(min, int) and isinstance(max, int):
                 random_numbers.append(random.randint(min, max))
-        else:
-            for _ in range(cnt):
+            else:
                 random_numbers.append(random.uniform(min, max))
 
         return json.dumps(random_numbers)
@@ -93,11 +92,7 @@ class RandomValues:
         if not (1 <= cnt <= 65535):
             raise ValueError("cnt must be between 1 and 65535")
 
-        # Do the thing
-        uuids = []
-        for _ in range(cnt):
-            uuids.append(str(uuid.uuid4()))
-
+        uuids = [str(uuid.uuid4()) for _ in range(cnt)]
         return json.dumps(uuids)
 
     # End of make_uuids()
@@ -134,13 +129,10 @@ class RandomValues:
         if not (1 <= len <= 65535):
             raise ValueError("len must be between 1 and 65535")
 
-        # Do the thing
-        strings = []
-        for _ in range(cnt):
-            strings.append(
-                "".join(random.choice(string.ascii_letters) for i in range(len))
-            )
-
+        strings = [
+            "".join(random.choice(string.ascii_letters) for _ in range(len))
+            for _ in range(cnt)
+        ]
         return json.dumps(strings)
 
 
@@ -175,16 +167,15 @@ class RandomValues:
         if not (1 <= cnt <= 65535):
             raise ValueError("cnt must be between 1 and 65535")
 
-        # Do the thing
-        passwords = []
-        for _ in range(cnt):
-            passwords.append(
-                "".join(
-                    random.choice(string.ascii_letters + string.digits + string.punctuation)
-                    for i in range(len)
+        passwords = [
+            "".join(
+                random.choice(
+                    string.ascii_letters + string.digits + string.punctuation
                 )
+                for _ in range(len)
             )
-
+            for _ in range(cnt)
+        ]
         return json.dumps(passwords)
 
 
@@ -211,9 +202,5 @@ class RandomValues:
         if not (1 <= cnt <= 65535):
             raise ValueError("cnt must be between 1 and 65535")
 
-        # Do the thing
-        strings = []
-        for _ in range(cnt):
-            strings.append(lorem.get_sentence())
-
+        strings = [lorem.get_sentence() for _ in range(cnt)]
         return json.dumps(strings)

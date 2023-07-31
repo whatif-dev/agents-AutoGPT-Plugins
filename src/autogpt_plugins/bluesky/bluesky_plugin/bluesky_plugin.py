@@ -6,7 +6,9 @@ from atproto import Client
 
 
 def username_and_pwd_set() -> bool:
-    return True if os.getenv("BLUESKY_USERNAME") and os.getenv("BLUESKY_APP_PASSWORD") else False
+    return bool(
+        os.getenv("BLUESKY_USERNAME") and os.getenv("BLUESKY_APP_PASSWORD")
+    )
 
 
 def post_message(text: str) -> str:
@@ -57,12 +59,17 @@ def get_latest_posts(username: str, number_of_posts=5) -> str | None:
         return f"Error! Message: {e}"
 
     columns = ["URI", "Text", "Date", "User", "Likes", "Replies"]
-    posts = []
-
-    for feed in profile_feed.feed:
-        posts.append([feed.post.uri, feed.post.record.text, feed.post.record.createdAt,
-                      feed.post.author.handle, feed.post.likeCount, feed.post.replyCount])
-
+    posts = [
+        [
+            feed.post.uri,
+            feed.post.record.text,
+            feed.post.record.createdAt,
+            feed.post.author.handle,
+            feed.post.likeCount,
+            feed.post.replyCount,
+        ]
+        for feed in profile_feed.feed
+    ]
     df = str(pd.DataFrame(posts, columns=columns))
 
     print(df)

@@ -82,9 +82,7 @@ def generate_improved_plan(prompt: str) -> str:
         temperature=float(temperature),
     )
 
-    # Extract the improved plan from the response
-    improved_plan = response.choices[0].message.content.strip()
-    return improved_plan
+    return response.choices[0].message.content.strip()
 
 
 def create_task(task_id=None, task_description: str = None, status=False):
